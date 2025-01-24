@@ -15,8 +15,8 @@ Ensure you have the following installed before proceeding:
 1. Clone this repository to your local machine:
 
    ```bash
-   git clone <repository_url>
-   cd <repository_directory>
+   git clone https://github.com/dinethsiriwardana/Terraform-configuration-to-deploy-an-Azure-Web-App-with-GitHub.git
+   cd Terraform-configuration-to-deploy-an-Azure-Web-App-with-GitHub
    ```
 
 2. Update the variables in the `terraform.tfvars` file or pass them during runtime:
