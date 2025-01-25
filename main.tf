@@ -2,18 +2,25 @@ terraform {
   required_providers {
     azurerm = {
       source = "hashicorp/azurerm"
-      version = "4.15.0"
+      version = "4.16.0"
     }
   }
 }
+
 provider "azurerm" {
     features {}
     subscription_id = var.subscription_id
 }
+
 variable "subscription_id" {
-  description = "Azure subscription ID"
-  type        = string
+    type = string
+    description = "The Azure subscription ID"
 }
+variable "acr_username" {}
+variable "acr_password" {}
+
+
+# create rg
 resource "azurerm_resource_group" "rg-az-tf-mschamps" {
   name     = "docker-container-rg"
   location = "East US"
@@ -27,7 +34,7 @@ resource "azurerm_container_group" "container-az-tf-mschamps" {
   dns_name_label     = "myapp-container-az-tf-mschamps"
   container {
     name   = "my-docker-container"
-    image  = "dinethsiriwardana/slcitiesfront:latest" # Replace with your image
+    image  = "dinethsiriwardana.azurecr.io/dinethsiriwardana.azurecr.io:latest" # Replace with your image
     cpu    = "0.5"
     memory = "1.5"
     ports {
@@ -35,16 +42,22 @@ resource "azurerm_container_group" "container-az-tf-mschamps" {
       protocol = "TCP"
     }
   }
+image_registry_credential {
+    server   = "dinethsiriwardana.azurecr.io"
+    username = var.acr_username
+    password = var.acr_password
+  }
+
   tags = {
     environment = "dev"
   }
 }
 
+
+
+
+# output
+# Container ip address
 output "container_ip_address" {
   value = azurerm_container_group.container-az-tf-mschamps.ip_address
-}
-
-# Output the FQDN
-output "container_fqdn" {
-  value = azurerm_container_group.container-az-tf-mschamps.fqdn
 }
